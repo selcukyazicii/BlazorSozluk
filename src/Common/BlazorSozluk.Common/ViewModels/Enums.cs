@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BlazorSozluk.Api.Domain.Model
+namespace BlazorSozluk.Common.ViewModels
 {
-    internal class EntryComment
+    internal class Enums
     {
     }
 }

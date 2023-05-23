@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace BlazorSozluk.Api.Domain.Model
 {
-    internal class BaseEntity
+    public abstract class BaseEntity
     {
+        public Guid Id { get; set; }
+        public DateTime CreateDate{ get; set; }
     }
 }

@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace BlazorSozluk.Common.ViewModels
 {
-    internal class Enums
+    public enum VoteType
     {
+        None=-1,
+        DownVote=0,
+        UpVote=1
     }
 }

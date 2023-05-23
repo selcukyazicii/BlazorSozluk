@@ -25,12 +25,18 @@ namespace BlazorSozluk.Infrastucture.Persistence.Context
         public DbSet<EntryCommentVote> EntryCommentVotes { get; set; }
         public DbSet<EmailConfirmation> EmailConfirmations { get; set; }
         public DbSet<EntryCommentFavorite> EntryCommentFavorites { get; set; }
+        public override int SaveChanges(bool acceptAllChangesOnSuccess)
+        {
+            OnBeforeSave();
+            return base.SaveChanges();
+        }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
         public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
         {
+            OnBeforeSave();
             return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
         }
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
@@ -49,7 +55,8 @@ namespace BlazorSozluk.Infrastucture.Persistence.Context
         {
             foreach (var entity in entities)
             {
-                entity.CreateDate = DateTime.Now;
+                if(entity.CreateDate==DateTime.MinValue)
+                   entity.CreateDate = DateTime.Now;
             }
         }
     }

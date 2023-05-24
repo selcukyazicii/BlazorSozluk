@@ -1,4 +1,5 @@
 ﻿using BlazorSozluk.Api.Domain.Models;
+using BlazorSozluk.Infrastucture.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -9,13 +10,12 @@ using System.Threading.Tasks;
 
 namespace BlazorSozluk.Infrastucture.Persistence.EntityConfigurations
 {
-    public abstract class BaseEntityConfiguration<T>:IEntityTypeConfiguration<T> where T : BaseEntity
+    public class UserEntityConfiguration:BaseEntityConfiguration<User>
     {
-        public virtual void Configure(EntityTypeBuilder<T>builder) 
+        public override void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.HasKey(x => x.Id);
-            builder.Property(x => x.Id).ValueGeneratedOnAdd();
-            builder.Property(x=>x.CreateDate).ValueGeneratedOnAdd();
+            base.Configure(builder);
+            builder.ToTable("user", BlazorSozlukContext.DEFAULT_SCHEMA);
         }
     }
 }

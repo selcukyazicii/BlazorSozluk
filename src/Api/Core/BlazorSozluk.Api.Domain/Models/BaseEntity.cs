@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BlazorSozluk.Api.Domain.Model
+namespace BlazorSozluk.Api.Domain.Models
 {
     public abstract class BaseEntity
     {

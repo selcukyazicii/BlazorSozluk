@@ -1,5 +1,4 @@
-﻿using BlazorSozluk.Api.Domain.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,7 +17,8 @@ namespace BlazorSozluk.Api.Domain.Models
         public virtual ICollection<Entry> Entries { get; set; }
         public virtual ICollection<EntryComment> EntryComments { get; set; }
         public virtual ICollection<EntryCommentFavorite> EntryCommentFavorites { get; set; }
-        public virtual ICollection<EntryCommentFavorite> EntryFavorites{ get; set; }
+        public virtual ICollection<EntryFavorite> EntryFavorites { get; set; }
+        //entrycommentfavorites'di düzeltildi,duruma göre geri getir hatayı çözemedim
 
 
     }

@@ -1,10 +1,11 @@
-﻿using System;
+﻿using BlazorSozluk.Api.Domain.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BlazorSozluk.Api.Domain.Model
+namespace BlazorSozluk.Api.Domain.Models
 {
     public class Entry:BaseEntity
     {

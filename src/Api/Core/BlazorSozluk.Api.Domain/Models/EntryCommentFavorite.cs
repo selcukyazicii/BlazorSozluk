@@ -1,5 +1,4 @@
-﻿using BlazorSozluk.Api.Domain.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,7 +10,7 @@ namespace BlazorSozluk.Api.Domain.Models
     {
         public Guid EntryCommentId { get; set; }
         public Guid CreatedById { get; set; }
-        public virtual EntryComment EntryComment { get; set; }
+        public virtual EntryComment EntryComments { get; set; }
         public virtual User CreatedUser { get; set; }
          
     }

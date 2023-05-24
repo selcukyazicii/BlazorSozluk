@@ -1,5 +1,4 @@
-﻿using BlazorSozluk.Api.Domain.Model;
-using BlazorSozluk.Api.Domain.Models;
+﻿using BlazorSozluk.Api.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

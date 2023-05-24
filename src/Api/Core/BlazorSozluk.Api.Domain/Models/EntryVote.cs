@@ -1,5 +1,4 @@
-﻿using BlazorSozluk.Api.Domain.Model;
-using BlazorSozluk.Common.ViewModels;
+﻿using BlazorSozluk.Common.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;

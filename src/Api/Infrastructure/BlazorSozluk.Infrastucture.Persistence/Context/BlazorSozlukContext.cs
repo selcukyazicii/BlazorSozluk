@@ -13,8 +13,13 @@ namespace BlazorSozluk.Infrastucture.Persistence.Context
     {
         public const string DEFAULT_SCHEMA = "dbo";
 
+        public BlazorSozlukContext()
+        {
+
+        }
         public BlazorSozlukContext(DbContextOptions options) : base(options)
         {
+
         }
         public DbSet<User> Users { get; set; }
         public DbSet<Entry> Entries { get; set; }
@@ -24,6 +29,17 @@ namespace BlazorSozluk.Infrastucture.Persistence.Context
         public DbSet<EntryCommentVote> EntryCommentVotes { get; set; }
         public DbSet<EmailConfirmation> EmailConfirmations { get; set; }
         public DbSet<EntryCommentFavorite> EntryCommentFavorites { get; set; }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                var connStr= "server=DESKTOP-D5IEUUD\\SQLEXPRESS;database=blazor_sozluk;integrated security=true;";
+                optionsBuilder.UseSqlServer(connStr, opt =>
+                {
+                    opt.EnableRetryOnFailure();
+                });
+            }
+        }
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
         {
             OnBeforeSave();

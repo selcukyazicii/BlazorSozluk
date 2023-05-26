@@ -12,8 +12,8 @@ namespace BlazorSozluk.Api.Application.Interfaces.Repositories
     {
         Task<int> AddAsync(TEntity entity);
         int Add(TEntity entity);
-        int Add(IEnumerable<TEntity> entities);
-        Task<int>AddAsync(IEnumerable<TEntity> entities);
+        int Add(IEnumerable<TEntity> entity);
+        Task<int>AddAsync(IEnumerable<TEntity> entity);
         Task<int> UpdateAsync(TEntity entity);
         int Update(TEntity entity);
         Task<int> DeleteAsync(TEntity entity);

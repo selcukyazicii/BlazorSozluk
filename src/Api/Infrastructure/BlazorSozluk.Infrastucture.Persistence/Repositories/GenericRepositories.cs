@@ -64,14 +64,19 @@ namespace BlazorSozluk.Infrastructure.Persistence.Repositories
 
         public IQueryable<TEntity> AsQueryable()=>entity.AsQueryable();
 
-        public Task BulkAdd(IEnumerable<TEntity> entities)
+        public virtual async Task BulkAdd(IEnumerable<TEntity> entities)
         {
-            throw new NotImplementedException();
+            if (entities!=null&&!entities.Any())
+                await Task.CompletedTask;
+            
+            await entity.AddRangeAsync(entities);
+            await dbContext.SaveChangesAsync();
         }
 
-        public Task BulkDelete(Expression<Func<TEntity, bool>> predicate)
+        public virtual Task BulkDelete(Expression<Func<TEntity, bool>> predicate)
         {
-            throw new NotImplementedException();
+            dbContext.RemoveRange(entity.Where(predicate));
+            return dbContext.SaveChangesAsync();    
         }
 
         public Task BulkDelete(IEnumerable<TEntity> entities)
@@ -79,16 +84,29 @@ namespace BlazorSozluk.Infrastructure.Persistence.Repositories
             throw new NotImplementedException();
         }
 
-        public Task BulkDeleteById(IEnumerable<Guid> ids)
+        public virtual Task BulkDeleteById(IEnumerable<Guid> ids)
         {
-            throw new NotImplementedException();
+            if (ids != null && !ids.Any())
+                return Task.CompletedTask;
+
+            dbContext.RemoveRange(entity.Where(i => ids.Contains(i.Id)));
+
+            return dbContext.SaveChangesAsync();
         }
 
-        public Task BulUpdate(IEnumerable<TEntity> entities)
+        public virtual Task BulUpdate(IEnumerable<TEntity> entities)
         {
-            throw new NotImplementedException();
+            if (entities != null && !entities.Any())
+                return Task.CompletedTask;
+            foreach (var entityItem in entities)
+            {
+                entity.Update(entityItem);
+            }
+            return dbContext.SaveChangesAsync();
         }
+        public Task<int> SaveChangesAsync() => dbContext.SaveChangesAsync();
 
+        public int SaveChanges() => dbContext.SaveChanges();
         public virtual int Delete(TEntity entity)
         {
             if (dbContext.Entry(entity).State==EntityState.Detached)
@@ -167,19 +185,56 @@ namespace BlazorSozluk.Infrastructure.Persistence.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<TEntity> GetByIdAsync(Guid id, bool noTracking = true, params Expression<Func<TEntity, object>>[] includes)
+        public virtual async Task<TEntity> GetByIdAsync(Guid id, bool noTracking = true, params Expression<Func<TEntity, object>>[] includes)
         {
-            throw new NotImplementedException();
+            var found = await entity.FindAsync(id);
+
+            if (found == null)
+                return null;
+
+            if (noTracking)
+                dbContext.Entry(found).State = EntityState.Detached;
+
+            foreach (var include in includes)
+            {
+                 dbContext.Entry(found).Reference(include).Load();
+            }
+
+            return found;
         }
 
-        public Task<List<TEntity>> GetList(Expression<Func<TEntity, bool>> predicate, bool noTracking = true, Func<IQueryable<TEntity>> orderBy = null, params Expression<Func<TEntity, object>>[] includes)
+        public virtual async Task<List<TEntity>> GetList(Expression<Func<TEntity, bool>> predicate, bool noTracking = true, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, params Expression<Func<TEntity, object>>[] includes)
         {
-            throw new NotImplementedException();
+            IQueryable<TEntity> query = entity;
+
+            if (predicate != null)
+                query = query.Where(predicate);
+
+            foreach (var include in includes)
+                query = query.Include(include);
+
+            if (orderBy != null)
+                query = orderBy(query);
+
+            if (noTracking)
+                query = query.AsNoTracking();
+
+            return await query.ToListAsync();
         }
 
-        public Task<TEntity> GetSingleAsync(Expression<Func<TEntity, bool>> predicate, bool noTracking = true, params Expression<Func<TEntity, object>>[] includes)
+        public virtual async Task<TEntity> GetSingleAsync(Expression<Func<TEntity, bool>> predicate, bool noTracking = true, params Expression<Func<TEntity, object>>[] includes)
         {
-            throw new NotImplementedException();
+            IQueryable<TEntity> query = entity;
+
+            if (predicate != null)
+                query = query.Where(predicate);
+
+            query = ApplyIncludes(query, includes);
+
+            if (noTracking)
+                query = query.AsNoTracking();
+
+            return await query.SingleOrDefaultAsync() ?? throw new InvalidOperationException();
         }
 
         public virtual int Update(TEntity entity)

@@ -9,11 +9,10 @@ using System.Threading.Tasks;
 
 namespace BlazorSozluk.Infrastructure.Persistence.Repositories
 {
-    public class UserRepository : GenericRepositories<User>, IUserRepository
+    public class EmailConfirmationRepository : GenericRepositories<EmailConfirmation>, IEmailConfirmationRepository
     {
-        public UserRepository(BlazorSozlukContext dbContext):base(dbContext)
+        public EmailConfirmationRepository(BlazorSozlukContext dbContext) : base(dbContext)
         {
-
         }
     }
 }

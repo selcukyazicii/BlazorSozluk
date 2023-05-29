@@ -9,11 +9,10 @@ using System.Threading.Tasks;
 
 namespace BlazorSozluk.Infrastructure.Persistence.Repositories
 {
-    public class UserRepository : GenericRepositories<User>, IUserRepository
+    public class EntryCommentRepository : GenericRepositories<EntryComment>, IEntryCommentRepository
     {
-        public UserRepository(BlazorSozlukContext dbContext):base(dbContext)
+        public EntryCommentRepository(BlazorSozlukContext dbContext) : base(dbContext)
         {
-
         }
     }
 }

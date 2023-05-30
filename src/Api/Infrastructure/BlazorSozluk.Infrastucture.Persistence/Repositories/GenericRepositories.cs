@@ -234,7 +234,7 @@ namespace BlazorSozluk.Infrastructure.Persistence.Repositories
             if (noTracking)
                 query = query.AsNoTracking();
 
-            return await query.SingleOrDefaultAsync() ?? throw new InvalidOperationException();
+            return await query.SingleOrDefaultAsync();
         }
 
         public virtual int Update(TEntity entity)

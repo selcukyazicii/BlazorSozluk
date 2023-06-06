@@ -16,7 +16,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BlazorSozluk.Api.Application.Features.Command.User
+namespace BlazorSozluk.Api.Application.Features.Command.User.Login
 {
     public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, LoginUserViewModel>
     {
@@ -33,10 +33,10 @@ namespace BlazorSozluk.Api.Application.Features.Command.User
 
         public async Task<LoginUserViewModel> Handle(LoginUserCommand request, CancellationToken cancellationToken)
         {
-            var user =await userRepository.GetSingleAsync(x => x.Email == request.EmailAddress);
+            var user = await userRepository.GetSingleAsync(x => x.Email == request.EmailAddress);
             if (user == null)
                 throw new DatabaseValidationException("User not found!");
-            var password=PasswordEncryptor.Encrypt(request.Password);
+            var password = PasswordEncryptor.Encrypt(request.Password);
             if (user.Password != password)
                 throw new DatabaseValidationException("Password is wrong!");
             if (!user.EmailConfirmed)
@@ -53,15 +53,15 @@ namespace BlazorSozluk.Api.Application.Features.Command.User
             result.Token = GenerateToken(claims);
             return result;
         }
-        private string GenerateToken(Claim[]claims)
+        private string GenerateToken(Claim[] claims)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["AuthConfig:Secret"]));
-            var creds= new SigningCredentials(key,SecurityAlgorithms.HmacSha256);
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var expiry = DateTime.Now.AddDays(10);
-            var token=new JwtSecurityToken(claims:claims,
-                expires:expiry,
+            var token = new JwtSecurityToken(claims: claims,
+                expires: expiry,
                 signingCredentials: creds,
-                notBefore:DateTime.Now);
+                notBefore: DateTime.Now);
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }

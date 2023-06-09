@@ -8,14 +8,15 @@ using System.Threading.Tasks;
 
 namespace BlazorSozluk.Common.Infrastructure
 {
-    public class QueueFactory
+    public static class QueueFactory
     {
         public static void SendMessage(string exchangeName
                                       ,string exchangeType
                                       ,string queueName
                                       ,object obj)
         {
-            var consumer = CreateBasicConsumer();
+            CreateBasicConsumer().EnsureExchange(exchangeName, exchangeType)
+                                 .EnsureQueue(queueName, queueName);
         }
         public static EventingBasicConsumer CreateBasicConsumer()
         {
@@ -31,6 +32,20 @@ namespace BlazorSozluk.Common.Infrastructure
                                            type:exchangeType,
                                            durable:false,
                                            autoDelete:false);
+            return consumer;
+        }
+
+        public static EventingBasicConsumer EnsureQueue(this EventingBasicConsumer consumer,
+                                                            string queueName, 
+                                                            string exchangeName)
+        {
+            consumer.Model.QueueDeclare(queue: queueName,
+                durable: false,
+                exclusive: false,
+                autoDelete: false,
+                null);
+
+            consumer.Model.QueueBind(queueName,exchangeName,queueName);
             return consumer;
         }
     }

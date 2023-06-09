@@ -28,6 +28,8 @@ namespace BlazorSozluk.Api.Application.Features.Command.User.Update
             if(existUser is null)
                 throw new DatabaseValidationException("User not found");
             _mapper.Map(request, existUser);
+            var rows = await _userRepository.UpdateAsync(existUser);
+            return existUser.Id;
         }
     }
 }

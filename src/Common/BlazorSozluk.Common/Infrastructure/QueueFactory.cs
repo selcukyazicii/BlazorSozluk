@@ -24,5 +24,14 @@ namespace BlazorSozluk.Common.Infrastructure
             var channel = connection.CreateModel();
             return new EventingBasicConsumer(channel);
         }
+        public static EventingBasicConsumer EnsureExchange(this EventingBasicConsumer consumer,
+            string exchangeName,string exchangeType = SozlukConstants.DefaultExchangeType)
+        {
+            consumer.Model.ExchangeDeclare(exchange:exchangeName, 
+                                           type:exchangeType,
+                                           durable:false,
+                                           autoDelete:false);
+            return consumer;
+        }
     }
 }

@@ -28,6 +28,8 @@ namespace BlazorSozluk.Api.Application.Features.Command.User.Create
             if (existUser is not null)
                 throw new DatabaseValidationException("User already exist");
             var dbUser = _mapper.Map<Domain.Models.User>(request);
+            var rows=await _userRepository.AddAsync(dbUser);
+
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using BlazorSozluk.Api.Application.Interfaces.Repositories;
+using BlazorSozluk.Common.Events.User;
+using BlazorSozluk.Common.Infrastructure;
 using BlazorSozluk.Common.Infrastructure.Exceptions;
 using BlazorSozluk.Common.Models.RequestModels;
 using MediatR;
@@ -29,7 +31,18 @@ namespace BlazorSozluk.Api.Application.Features.Command.User.Create
                 throw new DatabaseValidationException("User already exist");
             var dbUser = _mapper.Map<Domain.Models.User>(request);
             var rows=await _userRepository.AddAsync(dbUser);
-
+            if (rows>0)
+            {
+                var @event = new UserEmailChangedEvent()
+                {
+                    OldEmailAddres = null,
+                    NewEmailAddress = dbUser.Email
+                };
+                QueueFactory.SendMessageToExchange(exchangeName: "",
+                    exchangeType: "",
+                    queueName: "",
+                    , obj: @event);
+            }
         }
     }
 }
